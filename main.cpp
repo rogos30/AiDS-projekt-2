@@ -2,10 +2,11 @@
 
 #include <iostream>
 #include "LinkedList.h"
+#include "CityList.h"
 
 using namespace std;
 
-#define SMALL_BUFFER_SIZE 8
+#define HASH_TABLE_SIZE 13
 #define BUFFER_SIZE 1024
 
 void clearCharArray(char* array) {
@@ -162,14 +163,54 @@ void findRoads(LinkedList *connections, char* startingCity, int** roadMap, char*
 	}
 }
 
+int hashFunction(char* name) {
+	//BASED ON THE DJB2 ALGORITHM
+	unsigned  long hash = 5381;
+	for (int i = 0; i < strlen(name); i++) {
+		hash = ((hash << 5) + hash) + name[i]; //hash = hash*32 + hash + name[i] / hash*33 + name[i]
+	}
+	return hash;
+}
+
+
+
+
+
 
 int main()
 {
+	CityList* cities = new CityList[HASH_TABLE_SIZE];
 	LinkedList connections;
 	int sizeX, sizeY, flights;
-	char ch, buffer[BUFFER_SIZE];
+	char ch, buffer[BUFFER_SIZE], bufferTest[BUFFER_SIZE];
 
+	clearCharArray(buffer); clearCharArray(bufferTest);
+
+	/*
+	strcpy(buffer, "CHUJ");
+	cities[0].Add(buffer);
+	strcpy(buffer, "KURWA");
+	cities[0].Add(buffer);
+	strcpy(buffer, "PIZDA");
+	cities[0].Add(buffer);
+	cities[0].Print();
 	clearCharArray(buffer);
+	strcpy(buffer, "CHUJ");
+	strcpy(buffer2, "MIASTO");
+	cities[0].FindWith(buffer)->GetNeighbours()->Add(buffer2, 7);
+	cities[0].Print();
+
+	clearCharArray(buffer); clearCharArray(buffer2);
+	strcpy(buffer, "CHUJ");
+	strcpy(buffer2, "MIASTO 2");
+	cities[0].FindWith(buffer)->GetNeighbours()->Add(buffer2, 2);
+
+	clearCharArray(buffer); clearCharArray(buffer2);
+	strcpy(buffer, "CHUJ");
+	strcpy(buffer2, "MIASTO");
+	cities[0].FindWith(buffer)->GetNeighbours()->Add(buffer2, 4);
+	cities[0].Print();*/
+
 	//READING THE SIZE OF THE MAP
 	int index = 0;
 	while ((ch = getchar()) != ' ') {
@@ -209,6 +250,7 @@ int main()
 				resetRoadMap(roadMap, sizeY, sizeX);
 				clearCharArray(buffer);
 				strcpy(buffer, readCity(map, sizeY, sizeX, i, j));
+				cities[hashFunction(buffer) % HASH_TABLE_SIZE].Add(buffer);
 				findRoads(&connections, buffer, roadMap, map, sizeY, sizeX, i, j, 0);
 				//printRoadMap(roadMap, sizeY, sizeX);
 			}
