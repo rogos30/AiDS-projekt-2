@@ -107,65 +107,65 @@ int findShortestPath(int** roadMap, int sizeY, int sizeX, int y, int x) {
 }
 
 
-void findRoads(LinkedList *connections, char* startingCity, int** roadMap, char** map, int sizeY, int sizeX, int y, int x, int length) {
+void findRoads(AdjacencyList *connections, int** roadMap, char** map, int sizeY, int sizeX, int y, int x, int length) {
 	roadMap[y][x] = length;
 	if (y - 1 >= 0 && roadMap[y - 1][x] == -1) {
 		//GOING UP
 		if (map[y - 1][x] == '#') {
-			findRoads(connections, startingCity, roadMap, map, sizeY, sizeX, y - 1, x, length + 1);
+			findRoads(connections, roadMap, map, sizeY, sizeX, y - 1, x, length + 1);
 		}
 		else if (map[y - 1][x] == '*') {
 			char destinationCity[BUFFER_SIZE];
 			clearCharArray(destinationCity);
 			strcpy(destinationCity, readCity(map, sizeY, sizeX, y - 1, x));
 			//cout << "found a destination: " << destinationCity;
-			connections->Add(startingCity, destinationCity, length);
+			connections->Add(destinationCity, length);
 		}
 	}
 	if (y + 1 < sizeY && roadMap[y + 1][x] == -1) {
 		//GOING DOWN
 		if (map[y + 1][x] == '#') {
-			findRoads(connections, startingCity, roadMap, map, sizeY, sizeX, y + 1, x, length + 1);
+			findRoads(connections, roadMap, map, sizeY, sizeX, y + 1, x, length + 1);
 		}
 		else if (map[y + 1][x] == '*') {
 			char destinationCity[BUFFER_SIZE];
 			clearCharArray(destinationCity);
 			strcpy(destinationCity, readCity(map, sizeY, sizeX, y + 1, x));
 			//cout << "found a destination: " << destinationCity;
-			connections->Add(startingCity, destinationCity, length);
+			connections->Add(destinationCity, length);
 		}
 	}
 	if (x - 1 >= 0 && roadMap[y][x - 1] == -1) {
 		//GOING LEFT
 		if (map[y][x - 1] == '#') {
-			findRoads(connections, startingCity, roadMap, map, sizeY, sizeX, y, x - 1, length + 1);
+			findRoads(connections, roadMap, map, sizeY, sizeX, y, x - 1, length + 1);
 		}
 		else if (map[y][x - 1] == '*') {
 			char destinationCity[BUFFER_SIZE];
 			clearCharArray(destinationCity);
 			strcpy(destinationCity, readCity(map, sizeY, sizeX, y, x - 1));
 			//cout << "found a destination: " << destinationCity;
-			connections->Add(startingCity, destinationCity, length);
+			connections->Add(destinationCity, length);
 		}
 	}
 	if (x + 1 < sizeX && roadMap[y][x + 1] == -1) {
 		//GOING RIGHT
 		if (map[y][x + 1] == '#') {
-			findRoads(connections, startingCity, roadMap, map, sizeY, sizeX, y, x + 1, length + 1);
+			findRoads(connections, roadMap, map, sizeY, sizeX, y, x + 1, length + 1);
 		}
 		else if (map[y][x + 1] == '*') {
 			char destinationCity[BUFFER_SIZE];
 			clearCharArray(destinationCity);
 			strcpy(destinationCity, readCity(map, sizeY, sizeX, y, x + 1));
 			//cout << "found a destination: " << destinationCity;
-			connections->Add(startingCity, destinationCity, length);
+			connections->Add(destinationCity, length);
 		}
 	}
 }
 
-int hashFunction(char* name) {
+unsigned int hashFunction(char* name) {
 	//BASED ON THE DJB2 ALGORITHM
-	unsigned  long hash = 5381;
+	unsigned long hash = 5381;
 	for (int i = 0; i < strlen(name); i++) {
 		hash = ((hash << 5) + hash) + name[i]; //hash = hash*32 + hash + name[i] / hash*33 + name[i]
 	}
@@ -251,7 +251,8 @@ int main()
 				clearCharArray(buffer);
 				strcpy(buffer, readCity(map, sizeY, sizeX, i, j));
 				cities[hashFunction(buffer) % HASH_TABLE_SIZE].Add(buffer);
-				findRoads(&connections, buffer, roadMap, map, sizeY, sizeX, i, j, 0);
+				cout << "adding a city at cities[" << hashFunction(buffer) % HASH_TABLE_SIZE << "]\n";
+				findRoads(cities[hashFunction(buffer) % HASH_TABLE_SIZE].FindWith(buffer)->GetNeighbours(), roadMap, map, sizeY, sizeX, i, j, 0);
 				//printRoadMap(roadMap, sizeY, sizeX);
 			}
 		}
@@ -274,6 +275,7 @@ int main()
 			}
 		}
 		from[index]='\0';
+		cities[hashFunction(from) % HASH_TABLE_SIZE].Add(from);
 
 		index = 0;
 		while ((ch = getchar()) != ' ') {
@@ -289,12 +291,21 @@ int main()
 			index++;
 		}
 		length = atoi(buffer);
-
-		connections.Add(from, to, length);
+		cities[hashFunction(from) % HASH_TABLE_SIZE].FindWith(from)->GetNeighbours()->Add(to, length);
 		
 	}
 
-	connections.Print();
+	cout << endl;
+	for (int i = 0; i < HASH_TABLE_SIZE; i++) {
+		cout << "cities[" << i << "] "; cities[i].Print();
+	}
+
+	delete map;
+	delete roadMap;
+	for (int i = 0; i < HASH_TABLE_SIZE; i++) {
+		delete &cities[i];
+	}
+	//delete cities;
 
 	return 0;
 }

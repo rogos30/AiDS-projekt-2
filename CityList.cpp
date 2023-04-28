@@ -42,6 +42,9 @@ CityList::~CityList() {
 }
 
 void CityList::Add(char* name) {
+	if (FindWith(name) != nullptr) {
+		return;
+	}
 	if (head == nullptr) {
 		head = new CityNode(name, nullptr);
 		tail = head;

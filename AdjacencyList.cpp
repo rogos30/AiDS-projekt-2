@@ -178,8 +178,7 @@ void AdjacencyList::Print() {
 	AdjacencyNode* node = head;
 	cout << "Roads: " << size << endl;
 	while (node != nullptr) {
-		cout << " to: " << node->GetDestination() << " length: " << node->GetLength() << endl;
+		cout << "\t to: " << node->GetDestination() << ", length: " << node->GetLength() << endl;
 		node = node->GetNext();
 	}
-	cout << endl;
 }
