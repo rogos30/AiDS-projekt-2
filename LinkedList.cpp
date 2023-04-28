@@ -24,6 +24,10 @@ int Node::GetLength() {
 	return length;
 }
 
+void Node::SetLength(int length) {
+	this->length = length;
+}
+
 Node* Node::GetNext() {
 	return next;
 }
@@ -45,17 +49,29 @@ LinkedList::~LinkedList() {
 }
 
 void LinkedList::Add(char* from, char* to, int length) {
-	Node* node = head;
-	if (head == nullptr) {
-		head = new Node(from, to, length, nullptr);
-		tail = head;
-		size++;
-		return;
+	Node* node = FindWith(from, to);
+	if (node != nullptr) {
+		//FOUND A NODE WITH THE SAME FROM AND TO
+		if (node->GetLength() > length) {
+			//AND A SHORTER LENGTH
+			node->SetLength(length);
+			return;
+		}
 	}
 	else {
-		head = new Node(from, to, length, node);
-		size++;
-		return;
+		//INSERTING A NEW CONNECTION
+		node = head;
+		if (head == nullptr) {
+			head = new Node(from, to, length, nullptr);
+			tail = head;
+			size++;
+			return;
+		}
+		else {
+			head = new Node(from, to, length, node);
+			size++;
+			return;
+		}
 	}
 }
 
@@ -147,6 +163,16 @@ Node* LinkedList::GetTail() {
 	return tail;
 }
 
+Node* LinkedList::FindWith(char* from, char* to) {
+	Node* node = head;
+	while (node != nullptr) {
+		if (strcmp(node->GetFrom(), from) == 0 && strcmp(node->GetTo(), to) == 0) {
+			return node;
+		}
+		node = node->GetNext();
+	}
+	return nullptr;
+}
 
 int LinkedList::GetSize() {
 	return size;

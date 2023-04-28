@@ -17,6 +17,7 @@ public:
 	char* GetFrom();
 	char* GetTo();
 	int GetLength();
+	void SetLength(int length);
 	Node* GetNext();
 	void SetNext(Node* next);
 };
@@ -35,6 +36,7 @@ public:
 	void RemoveTail();
 	Node* GetHead();
 	Node* GetTail();
+	Node* FindWith(char* from, char* to);
 	int GetSize();
 	void Print();
 };

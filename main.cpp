@@ -117,7 +117,7 @@ void findRoads(LinkedList *connections, char* startingCity, int** roadMap, char*
 			char destinationCity[BUFFER_SIZE];
 			clearCharArray(destinationCity);
 			strcpy(destinationCity, readCity(map, sizeY, sizeX, y - 1, x));
-			cout << "found a destination: " << destinationCity;
+			//cout << "found a destination: " << destinationCity;
 			connections->Add(startingCity, destinationCity, length);
 		}
 	}
@@ -130,7 +130,7 @@ void findRoads(LinkedList *connections, char* startingCity, int** roadMap, char*
 			char destinationCity[BUFFER_SIZE];
 			clearCharArray(destinationCity);
 			strcpy(destinationCity, readCity(map, sizeY, sizeX, y + 1, x));
-			cout << "found a destination: " << destinationCity;
+			//cout << "found a destination: " << destinationCity;
 			connections->Add(startingCity, destinationCity, length);
 		}
 	}
@@ -143,7 +143,7 @@ void findRoads(LinkedList *connections, char* startingCity, int** roadMap, char*
 			char destinationCity[BUFFER_SIZE];
 			clearCharArray(destinationCity);
 			strcpy(destinationCity, readCity(map, sizeY, sizeX, y, x - 1));
-			cout << "found a destination: " << destinationCity;
+			//cout << "found a destination: " << destinationCity;
 			connections->Add(startingCity, destinationCity, length);
 		}
 	}
@@ -156,7 +156,7 @@ void findRoads(LinkedList *connections, char* startingCity, int** roadMap, char*
 			char destinationCity[BUFFER_SIZE];
 			clearCharArray(destinationCity);
 			strcpy(destinationCity, readCity(map, sizeY, sizeX, y, x + 1));
-			cout << "found a destination: " << destinationCity;
+			//cout << "found a destination: " << destinationCity;
 			connections->Add(startingCity, destinationCity, length);
 		}
 	}
