@@ -158,6 +158,17 @@ AdjacencyNode* AdjacencyList::GetTail() {
 	return tail;
 }
 
+AdjacencyNode* AdjacencyList::GetAtPos(int position) {
+	if (position >= size) {
+		return nullptr;
+	}
+	AdjacencyNode* node = head;
+	for (int i = 0; i < position; i++) {
+		node = node->GetNext();
+	}
+	return node;
+}
+
 AdjacencyNode* AdjacencyList::FindWith(char* destination) {
 	AdjacencyNode* node = head;
 	while (node != nullptr) {

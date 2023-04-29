@@ -33,6 +33,7 @@ public:
 	void RemoveTail();
 	AdjacencyNode* GetHead();
 	AdjacencyNode* GetTail();
+	AdjacencyNode* GetAtPos(int position);
 	AdjacencyNode* FindWith(char* destination);
 	int GetSize();
 	void Print();
