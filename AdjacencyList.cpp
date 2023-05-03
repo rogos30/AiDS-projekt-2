@@ -41,6 +41,13 @@ AdjacencyList::~AdjacencyList() {
 	while (head != nullptr) {
 		RemoveHead();
 	}
+
+	/*Node* node = head;
+	while (node != nullptr) {
+		Node* next = node->GetNext();
+		delete node;
+		node = next;
+	}*/
 }
 
 void AdjacencyList::Add(char* destination, int length) {
@@ -50,12 +57,14 @@ void AdjacencyList::Add(char* destination, int length) {
 		if (node->GetLength() > length) {
 			//AND A SHORTER LENGTH
 			node->SetLength(length);
+			//delete node;
 			return;
 		}
 	}
 	else {
+		//cout << "Adding " << destination << " with length " << length << endl;
+		delete node;
 		//INSERTING A NEW CONNECTION
-		node = head;
 		if (head == nullptr) {
 			head = new AdjacencyNode(destination, length, nullptr);
 			tail = head;
@@ -63,7 +72,7 @@ void AdjacencyList::Add(char* destination, int length) {
 			return;
 		}
 		else {
-			head = new AdjacencyNode(destination, length, node);
+			head = new AdjacencyNode(destination, length, head);
 			size++;
 			return;
 		}
@@ -100,16 +109,13 @@ void AdjacencyList::Remove(AdjacencyNode* node) {
 	while (current != nullptr) {
 		if (current == node) {
 			if (prev == nullptr) {
-				RemoveHead();
-			}
-			else if (current->GetNext() == nullptr) {
-				RemoveTail();
+				head = current->GetNext();
 			}
 			else {
 				prev->SetNext(current->GetNext());
-				delete current;
-				size--;
 			}
+			delete current;
+			size--;
 			return;
 		}
 		prev = current;
@@ -119,9 +125,8 @@ void AdjacencyList::Remove(AdjacencyNode* node) {
 
 void AdjacencyList::RemoveHead() {
 	if (head != nullptr) {
-		AdjacencyNode* node = head;
+		//cout << "AdjacencyList::RemoveHead() " << size << " " << GetHead()->GetDestination() << "\n";
 		head = head->GetNext();
-		//delete node;
 		size--;
 	}
 }
@@ -140,7 +145,7 @@ void AdjacencyList::RemoveTail() {
 					prev->SetNext(NULL);
 					tail = prev;
 				}
-				//delete node;
+				delete node;
 				size--;
 				return;
 			}
@@ -173,10 +178,12 @@ AdjacencyNode* AdjacencyList::FindWith(char* destination) {
 	AdjacencyNode* node = head;
 	while (node != nullptr) {
 		if (strcmp(node->GetDestination(), destination) == 0) {
+			//cout << "Found " << destination << " with length " << node->GetLength() << endl;
 			return node;
 		}
 		node = node->GetNext();
 	}
+	//cout << "Did not find " << destination << endl;
 	return nullptr;
 }
 

@@ -55,9 +55,28 @@ LinkedList::LinkedList() {
 	size = 0;
 }
 
+LinkedList::LinkedList(const LinkedList& other) {
+	head = nullptr;
+	tail = nullptr;
+	size = 0;
+	Node* node = other.head;
+	while (node != nullptr) {
+		Add(node->GetName());
+		node = node->GetNext();
+	}
+}
+
 LinkedList::~LinkedList() {
-	while (head != nullptr) {
+	//cout << "Deleting LinkedList" << endl;
+	/*while (head != nullptr) {
 		RemoveHead();
+	}*/
+
+	Node* node = head;
+	while (node != nullptr) {
+		Node* next = node->GetNext();
+		delete node;
+		node = next;
 	}
 }
 
@@ -114,7 +133,7 @@ void LinkedList::Remove(Node* node) {
 			}
 			else {
 				prev->SetNext(current->GetNext());
-				delete current;
+				//delete current;
 				size--;
 			}
 			return;
@@ -126,9 +145,7 @@ void LinkedList::Remove(Node* node) {
 
 void LinkedList::RemoveHead() {
 	if (head != nullptr) {
-		Node* node = head;
 		head = head->GetNext();
-		//delete node;
 		size--;
 	}
 }

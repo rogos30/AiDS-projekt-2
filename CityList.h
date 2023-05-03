@@ -10,13 +10,18 @@ class AdjacencyList;
 
 class CityNode {
 	char name[BUFFER_SIZE];
+	int locationX;
+	int locationY;
 	AdjacencyList* neighbours;
 	CityNode* next;
 public:
-	CityNode(char* name, CityNode* next);
+	CityNode(char* name, int locationY, int locationX, CityNode* next);
+	CityNode(int locationY, int locationX, CityNode* next);
 	~CityNode();
 	char* GetName();
 	CityNode* GetNext();
+	int GetLocationX();
+	int GetLocationY();
 	void SetNext(CityNode* next);
 	AdjacencyList* GetNeighbours();
 };
@@ -28,13 +33,15 @@ class CityList {
 public:
 	CityList();
 	~CityList();
-	void Add(char* name);
+	void Add(char* name, int locationY, int locationX);
+	void Add(int locationY, int locationX);
 	//void Remove(Organism* organism);
 	void Remove(CityNode* node);
 	void RemoveHead();
 	void RemoveTail();
 	CityNode* GetHead();
 	CityNode* GetTail();
+	CityNode* GetAtPos(int position);
 	CityNode* FindWith(char* name);
 	int GetSize();
 	void Print();

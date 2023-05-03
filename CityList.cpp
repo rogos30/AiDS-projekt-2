@@ -5,9 +5,19 @@ using namespace std;
 
 class AdjacencyList;
 
-CityNode::CityNode(char* name, CityNode* next) {
+CityNode::CityNode(char* name, int locationY, int locationX, CityNode* next) {
 	strcpy(this->name, name);
 	this->next = next;
+	this->locationY = locationY;
+	this->locationX = locationX;
+	neighbours = new AdjacencyList();
+}
+
+CityNode::CityNode(int locationY, int locationX, CityNode* next) {
+	strcpy(this->name, "");
+	this->next = next;
+	this->locationY = locationY;
+	this->locationX = locationX;
 	neighbours = new AdjacencyList();
 }
 
@@ -19,6 +29,14 @@ char* CityNode::GetName() {
 
 CityNode* CityNode::GetNext() {
 	return next;
+}
+
+int CityNode::GetLocationX() {
+	return locationX;
+}
+
+int CityNode::GetLocationY() {
+	return locationY;
 }
 
 void CityNode::SetNext(CityNode* next) {
@@ -36,22 +54,39 @@ CityList::CityList() {
 }
 
 CityList::~CityList() {
-	while (head != nullptr) {
-		RemoveHead();
+	CityNode* node = head;
+	while (node != nullptr) {
+		CityNode* next = node->GetNext();
+		delete node;
+		node = next;
 	}
 }
 
-void CityList::Add(char* name) {
+void CityList::Add(char* name, int locationY, int locationX) {
 	if (FindWith(name) != nullptr) {
 		return;
 	}
 	if (head == nullptr) {
-		head = new CityNode(name, nullptr);
+		head = new CityNode(name, locationY, locationX, nullptr);
 		tail = head;
 	}
 	else {
-		head = new CityNode(name, head);
+		head = new CityNode(name, locationY, locationX, head);
 	}
+	//cout << "Added city: " << name << " at: " << locationY << " " << locationX << endl;
+	size++;
+	return;
+}
+
+void CityList::Add(int locationY, int locationX) {
+	if (head == nullptr) {
+		head = new CityNode(locationY, locationX, nullptr);
+		tail = head;
+	}
+	else {
+		head = new CityNode(locationY, locationX, head);
+	}
+	//cout << "Added city with no name at: " << locationY << " " << locationX << endl;
 	size++;
 	return;
 }
@@ -105,9 +140,7 @@ void CityList::Remove(CityNode* node) {
 
 void CityList::RemoveHead() {
 	if (head != nullptr) {
-		CityNode* node = head;
 		head = head->GetNext();
-		//delete node;
 		size--;
 	}
 }
@@ -142,6 +175,17 @@ CityNode* CityList::GetHead() {
 
 CityNode* CityList::GetTail() {
 	return tail;
+}
+
+CityNode* CityList::GetAtPos(int position) {
+	if (position >= size) {
+		return nullptr;
+	}
+	CityNode* node = head;
+	for (int i = 0; i < position; i++) {
+		node = node->GetNext();
+	}
+	return node;
 }
 
 CityNode* CityList::FindWith(char* name) {

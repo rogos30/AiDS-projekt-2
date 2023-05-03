@@ -4,7 +4,7 @@
 using namespace std;
 
 #define SMALL_BUFFER_SIZE 8
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 64
 
 class Node {
 	char name[BUFFER_SIZE];
@@ -32,6 +32,7 @@ class LinkedList {
 	int size;
 public:
 	LinkedList();
+	LinkedList(const LinkedList& other);
 	~LinkedList();
 	void Add(char* name);
 	//void Remove(Organism* organism);
